@@ -13,7 +13,7 @@
 )
 
 ; Turno actual
-(setq turno 1) 
+(setq tr 1) 
 ; Avanzar al gato a la derecha
 (defun avanzar-gato-derecha (estado)
    (let
@@ -33,6 +33,7 @@
             )
        (setf (nth (+ j 1) (nth (+ i 1) tab)) 1)
        (setf (nth j (nth i tab)) 0)
+       (setf tr 9)
        (list tab (list (+ i 1) (+ j 1)) 9)
        )
       )
@@ -58,6 +59,7 @@
 
        (setf (nth (- j 1) (nth (+ i 1) tab)) 1)
        (setf (nth j (nth i tab)) 0)
+       (setf tr 9)
        (list tab (list (+ i 1) (- j 1)) 9)
       )
      )
@@ -83,7 +85,8 @@
 
        (setf (nth (+ j 1) (nth (- i 1) tab)) 9)
        (setf (nth j (nth i tab)) 0)
-       (list (list (- i 1) (+ j 1)) 1)
+       (setf tr 1)
+       (list tab (list (- i 1) (+ j 1)) 1)
       )
      )
    )
@@ -108,6 +111,7 @@
 
        (setf (nth (- j 1) (nth (- i 1) tab)) 9)
        (setf (nth j (nth i tab)) 0)
+       (setf tr 1)
        (list tab (list (- i 1) (- j 1)) 1)
       )
      )
@@ -137,6 +141,7 @@
        ; Acciones
        (setf (nth (+ j 1) (nth (+ i 1) tab)) 9)
        (setf (nth j (nth i tab)) 0)
+       (setf tr 1)
        (list tab (list (+ i 1) (+ j 1)) 1)
       )
      )
@@ -164,6 +169,7 @@
        ; Acciones
        (setf (nth (- j 1) (nth (+ i 1) tab)) 9)
        (setf (nth j (nth i tab)) 0)
+       (setf tr 1)
        (list tab (list (+ i 1) (- j 1)) 1)
       )
      )
@@ -171,12 +177,12 @@
 )
 
 (defun vista-jugada (estado)
-  (if (not estado) 
-      "Jugada no valida"
-      (and (imprimir-tablero (nth 0 estado))
-           (format t "~&Posicion: ~S" (nth 1 estado))
-           (FORMAT T "~&TURNO: ~S" (NTH 2 ESTADO))
-      )  
+  (cond 
+   ((not estado) "Jugada no valida")
+   ((not (not estado)) (imprimir-tablero (nth 0 estado))
+    (format t "~&Posicion: ~S" (nth 1 estado))
+    (FORMAT T "~&TURNO: ~S" (NTH 2 ESTADO))  
+   )
    )
  )
 
@@ -185,7 +191,6 @@
      (format t "~&~S" fila)
   )
 )
-
 
 ; Nosotros mi amor <3
 (defun mensaje (mensaje)

@@ -11,7 +11,9 @@
        (0 0 0 9 0 0 0 0)
       )
 )
-; Estado actual
+
+; Turno actual
+(setq turno 1) 
 ; Avanzar al gato a la derecha
 (defun avanzar-gato-derecha (estado)
    (let
@@ -21,21 +23,19 @@
      (i (nth 0 (nth 1 estado)))
      (j (nth 1 (nth 1 estado)))
     )
-    (cond
+     (cond
       (
-       (and
-        (or (< i 7)  (< j 7)) 
-        (or (< (+ i 1) 7)  (< (+ j 1) 7)) 
-        (= turno 1)
-        (= (nth (+ j 1) (nth (+ i 1) tab)) 0)
-        (= (nth j (nth i tab)) 1)
-       )
-       
+       (and (and (< i 8) (< j 8)) 
+            (and (< (+ i 1) 8) (< (+ j 1) 8)) 
+            (= turno 1)
+            (= (nth (+ j 1) (nth (+ i 1) tab)) 0)
+            (= (nth j (nth i tab)) 1)
+            )
        (setf (nth (+ j 1) (nth (+ i 1) tab)) 1)
        (setf (nth j (nth i tab)) 0)
        (list tab (list (+ i 1) (+ j 1)) 9)
+       )
       )
-     )
    )
 )
 ; Avanzar gato a la izquierda
@@ -49,13 +49,11 @@
     )
     (cond
       (
-       
-       (and 
-        (or (< i 7)  (> j 0))
-        (or (< (+ i 1) 7)  (> (- j 1) 0)) 
-        (= turno 1) 
-        (= (nth (- j 1) (nth (+ i 1) tab)) 0)
-        (= (nth j (nth i tab)) 1)
+       (and (and (< i 8)  (>= j 0))
+            (and (< (+ i 1) 8)  (>= (- j 1) 0)) 
+            (= turno 1) 
+            (= (nth (- j 1) (nth (+ i 1) tab)) 0)
+            (= (nth j (nth i tab)) 1)
        )
 
        (setf (nth (- j 1) (nth (+ i 1) tab)) 1)
@@ -76,12 +74,11 @@
     )
     (cond
       (
-       (and 
-        (or (> i 0)  (< j 7))
-        (or (> (- i 1) 0)  (< (+ j 1) 7)) 
-        (= turno 9)
-        (= (nth (+ j 1) (nth (- i 1) tab)) 0)
-        (= (nth j (nth i tab)) 9)
+       (and (and (>= i 0)  (< j 8))
+            (and (>= (- i 1) 0)  (< (+ j 1) 8)) 
+            (= turno 9)
+            (= (nth (+ j 1) (nth (- i 1) tab)) 0)
+            (= (nth j (nth i tab)) 9)
        )
 
        (setf (nth (+ j 1) (nth (- i 1) tab)) 9)
@@ -102,25 +99,23 @@
     )
     (cond
       (
-
-       (and
-        (or (> i 0)  (> j 0)) 
-        (or (> (- i 1) 0)  (> (- j 1) 0)) 
-        (= turno 9) 
-        (= (nth (- j 1) (nth (- i 1) tab)) 0)
-        (= (nth j (nth i tab)) 9)
+       (and (and (>= i 0)  (>= j 0)) 
+            (and (>= (- i 1) 0)  (>= (- j 1) 0)) 
+            (= turno 9) 
+            (= (nth (- j 1) (nth (- i 1) tab)) 0)
+            (= (nth j (nth i tab)) 9)
        )
 
        (setf (nth (- j 1) (nth (- i 1) tab)) 9)
        (setf (nth j (nth i tab)) 0)
-       (list (list (- i 1) (- j 1)) 1)
+       (list tab (list (- i 1) (- j 1)) 1)
       )
      )
    )
 )
 
 ; Retroceder raton izquierda
-(defun retro-raton-izquierda (estado)
+(defun retro-raton-derecha (estado)
 
   (let
     (
@@ -133,15 +128,14 @@
       ; Primera condicion
       (
        ; Comprobacion
-       (and 
-        (or (< i 7)  (< j 7)) 
-        (or (< (+ i 1) 7)  (< (+ j 1) 7)) 
-        (= turno 9) 
-        (= (nth (+ j 1) (nth (+ i 1) tab)) 0)
-        (= (nth j (nth i tab)) 9)
+       (and (and (< i 8)  (< j 8)) 
+            (and (< (+ i 1) 8)  (< (+ j 1) 8)) 
+            (= turno 9) 
+            (= (nth (+ j 1) (nth (+ i 1) tab)) 0)
+            (= (nth j (nth i tab)) 9)
        )
        ; Acciones
-       (setf (nth (+ j 1) (nth (+ i 1) tab)) 1)
+       (setf (nth (+ j 1) (nth (+ i 1) tab)) 9)
        (setf (nth j (nth i tab)) 0)
        (list tab (list (+ i 1) (+ j 1)) 1)
       )
@@ -149,7 +143,7 @@
    )
 )
 ; Retroceder raton derecha
-(defun retro-raton-derecha (estado)
+(defun retro-raton-izquierda (estado)
   (let
     (
      (tab (nth 0 estado))
@@ -161,12 +155,11 @@
      ; Primera condicion
       (
        ; Comprobacion
-       (and 
-        (or (< i 7)  (> j 0)) 
-        (or (< (+ i 1) 0) (> (- j 1) 0)) 
-        (= turno 9) 
-        (= (nth (- j 1) (nth (+ i 1) tab)) 0)
-        (= (nth j (nth i tab)) 9)
+       (and (and (< i 8)  (>= j 0)) 
+            (and (< (+ i 1) 8) (>= (- j 1) 0)) 
+            (= turno 9) 
+            (= (nth (- j 1) (nth (+ i 1) tab)) 0)
+            (= (nth j (nth i tab)) 9)
        )
        ; Acciones
        (setf (nth (- j 1) (nth (+ i 1) tab)) 9)
@@ -177,11 +170,15 @@
    )
 )
 
-(defun vista-tablero (estado)
-  (imprimir-tablero (nth 0 estado))
-  (format t "~&Posicion: ~S" (nth 1 estado))
-  (format t "~&Turno: ~S" (nth 2 estado))
-)
+(defun vista-jugada (estado)
+  (if (not estado) 
+      "Jugada no valida"
+      (and (imprimir-tablero (nth 0 estado))
+           (format t "~&Posicion: ~S" (nth 1 estado))
+           (FORMAT T "~&TURNO: ~S" (NTH 2 ESTADO))
+      )  
+   )
+ )
 
 (defun imprimir-tablero (tablero)
   (dolist (fila tablero)
@@ -190,6 +187,7 @@
 )
 
 
+; Nosotros mi amor <3
 (defun mensaje (mensaje)
  print "holi amotito *-*"
  print "ati?"
