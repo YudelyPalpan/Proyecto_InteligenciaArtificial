@@ -12,6 +12,31 @@
         )
 )
 
+(setq tab_gato
+      '(
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 1 0 1 0 0 0)
+        (0 0 0 9 0 0 0 0)
+        (0 0 1 0 1 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        )
+)
+
+(setq tab_raton
+      '(
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 9 0 0 0 0)
+        (0 0 1 0 1 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 1 0 0 0 1 0)
+        (0 0 0 0 0 0 0 0)
+        )
+)
 ; Turno actual
 (setq tr 1) 
 ; Avanzar al gato a la derecha
@@ -230,7 +255,7 @@
   ((lambda (tab i j turno)
      (cond
        ((= turno 9) (if (= (sumar-filas-adelante tab i) 0) "Ha ganado el raton"))
-       ((= turno 1) (if (raton-encerrado) "Ha ganado el gato"))
+       ((= turno 1) (if (raton-encerrado estado) "Ha ganado el gato"))
        )
      ) (copy-tree (nth 0 estado)) (nth 0 (nth 1 estado)) (nth 1 (nth 1 estado)) (nth 2 estado))
   )
