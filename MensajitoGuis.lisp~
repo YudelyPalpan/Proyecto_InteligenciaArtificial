@@ -10,8 +10,33 @@
         (0 0 0 0 0 0 0 0)
         (0 0 0 9 0 0 0 0)
         )
-      )
+)
 
+(setq tab_gato
+      '(
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 1 0 1 0 0 0)
+        (0 0 0 9 0 0 0 0)
+        (0 0 1 0 1 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        )
+)
+
+(setq tab_raton
+      '(
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 9 0 0 0 0)
+        (0 0 1 0 1 0 0 0)
+        (0 0 0 0 0 0 0 0)
+        (0 0 1 0 0 0 1 0)
+        (0 0 0 0 0 0 0 0)
+        )
+)
 ; Turno actual
 (setq tr 1) 
 ; Avanzar al gato a la derecha
@@ -175,8 +200,8 @@
   (cond 
     ((not estado) "Jugada no valida")
     ((not (not estado)) (imprimir-tablero (nth 0 estado))
-     (format t "~&Posicion: ~S" (nth 1 estado))
-     (format T "~&Turno: ~S" (NTH 2 ESTADO))  
+     (format nil "~&Posicion: ~S" (nth 1 estado))
+     (format nil "~&Turno: ~S" (NTH 2 ESTADO))  
      )
     )
   )
@@ -230,8 +255,35 @@
   ((lambda (tab i j turno)
      (cond
        ((= turno 9) (if (= (sumar-filas-adelante tab i) 0) "Ha ganado el raton"))
-       ((= turno 1) (if (raton-encerrado) "Ha ganado el gato"))
+       ((= turno 1) (if (raton-encerrado estado) "Ha ganado el gato"))
        )
      ) (copy-tree (nth 0 estado)) (nth 0 (nth 1 estado)) (nth 1 (nth 1 estado)) (nth 2 estado))
-  )
+)
 
+(defun gen-sucesores (estado)
+  (format nil "~&Turno: ~S" (nth 2 estado))
+  (setq sucesores nil)
+  (cond
+   ((= (nth 2 estado) 9)
+    (if (avanzar-raton-izquierda estado) 
+        (setq sucesores (append sucesores (list (avanzar-raton-izquierda estado)))))
+    (if (avanzar-raton-derecha estado) 
+        (setq sucesores (append sucesores (list (avanzar-raton-derecha estado)))))
+    (if (retro-raton-izquierda estado) 
+        (setq sucesores (append sucesores (list (retro-raton-izquierda estado)))))
+    (if (retro-raton-derecha estado) 
+        (setq sucesores (append sucesores (list (retro-raton-derecha estado)))))
+   )
+   ((= (nth 2 estado) 1)
+    (if (avanzar-gato-izquierda estado) 
+        (setq sucesores (append sucesores (list (avanzar-gato-izquierda estado)))))
+    (if (avanzar-gato-derecha estado) 
+        (setq sucesores (append sucesores (list (avanzar-gato-derecha estado)))))
+    )
+   )
+  sucesores
+)
+
+(defun mostrar-sucesores (sucesores)
+  (mapcar #' (lambda (sucesor) (vista-jugada sucesor)) sucesores)
+)
