@@ -1,1 +1,7 @@
-sadkasjdkasjd.sdasdljasld
+sadkasjdkasj
+print("hola")
+
+print "hola"
+
+
+//pruea majkanasfl.
