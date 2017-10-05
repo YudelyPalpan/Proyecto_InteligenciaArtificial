@@ -1,1 +1,7 @@
 sadkasjdkasjd.sdasdljasld
+
+def funcion (mensaje):
+	print(f"El mensaje es {mensaje}")
+
+
+funcion("  ")
