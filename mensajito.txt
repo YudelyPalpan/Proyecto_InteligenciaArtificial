@@ -1,3 +1,4 @@
+
 sadkasjdkasjd.sdasdljasld
 
 def funcion (mensaje):
@@ -5,3 +6,10 @@ def funcion (mensaje):
 
 
 funcion("  ")
+sadkasjdkasj
+print("hola")
+
+print "hola"
+
+
+//pruea majkanasfl.
