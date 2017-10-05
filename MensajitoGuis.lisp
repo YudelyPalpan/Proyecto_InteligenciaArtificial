@@ -1,4 +1,4 @@
-; tablero
+;tablero
 (setq tablero
       '(
         (1 0 1 0 1 0 1 0)
@@ -145,7 +145,6 @@
 
 ; Retroceder raton izquierda
 (defun retro-raton-derecha (estado p-ficha-mov)
-  
   (let
     (
      (tab (copy-tree (nth 0 estado)))
