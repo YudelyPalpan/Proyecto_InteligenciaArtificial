@@ -1,9 +1,15 @@
 quiero probar el controlador de veriosnes de git 
 
  a ver , vas a escribir acà y vamos a ver còmoo funciona , si? peo :v
+<<<<<<< HEAD
  ////
 <escribe ahi tu mensaje> :*
 	Amotito :c te quiero pue :'(
 	Disculpame si soy peo :c
 asdkajskdkasjdkjaskldjklasj1555554554512121212121221212121212
 ///
+=======
+
+
+dhkldjowqmm,j012948239ir `sqq
+>>>>>>> refs/remotes/origin/master
