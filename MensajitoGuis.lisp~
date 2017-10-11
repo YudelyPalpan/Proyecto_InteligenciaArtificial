@@ -18,10 +18,10 @@
         (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
-        (0 0 1 0 1 0 0 0)
-        (0 0 0 9 0 0 0 0)
-        (0 0 1 0 1 0 0 0)
+        (0 0 0 0 1 0 0 0)
         (0 0 0 0 0 0 0 0)
+        (0 0 1 0 0 0 1 0)
+        (1 0 0 0 0 0 0 9)
         )
 )
 
@@ -300,6 +300,57 @@
   sucesores
 )
 
+(defun sucesores-por-turno (estado)
+
+)
+
+
 (defun mostrar-sucesores (sucesores)
   (mapcar #' (lambda (sucesor) (vista-jugada sucesor)) sucesores)
 )
+
+;;;;;;;;;;;
+;11/10/17
+;;;;;;;;;;;
+
+(defun potencia (x)
+ (* x x)
+)
+
+(defun distancia (p1 p2)
+ (let ((x0 (nth 0 p1)) (y0 (nth 1 p1)) (x1 (nth 0 p2)) (y1 (nth 1 p2)))
+  (sqrt (+ (potencia (- x1 x0)) (potencia (- y1 y0))))
+ )
+)
+
+(defun posicion-evaluacion (p1 p2)
+ (if (> (- (nth 0 p2) (nth 0 p1)) 0) 
+  1
+  -1
+ )
+)
+
+;Función de Evaluación
+;promedio de distancias de los gatos al ratón
+(defun evaluacion (tablero)
+ (let ((dist-gato-raton 0) (p-raton (pos-raton tablero)))
+  (mapcar #' 
+   (lambda (p-gato)
+    (setq dist-gato-raton (+ dist-gato-raton (* (posicion-evaluacion p-gato p-raton) (distancia p-gato p-raton))))
+   )
+   (pos-gatos tablero)
+  )
+ dist-gato-raton
+ )
+)
+
+(defun evaluar-sucesores (sucesores)
+  (mapcar #' 
+   (lambda (sucesor)
+     (evaluacion (nth 0 sucesor))
+   )
+   sucesores
+  )
+)
+
+

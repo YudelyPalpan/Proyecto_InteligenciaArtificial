@@ -301,7 +301,19 @@
 )
 
 (defun sucesores-por-turno (estado)
-
+  (let ((lista-sucesores nil))
+     (cond 
+      ((= (nth 1 estado) 1)
+       (dolist (p-gato (pos-gatos (nth 0 estado)))
+          (setq lista-sucesores (append lista-sucesores (gen-sucesores estado p-gato)))
+       )
+      )
+      ((= (nth 1 estado) 9)
+       (setq lista-sucesores (gen-sucesores estado (pos-raton estado)))
+      )
+     )
+     lista-sucesores
+  )
 )
 
 
