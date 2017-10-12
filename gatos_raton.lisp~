@@ -269,13 +269,12 @@
   )
 
 (defun test-parada (estado)
-  ((lambda (tab turno)
+  ((lambda (tab i j turno)
      (cond
-       ((= turno 9) (if (= (sumar-filas-adelante tab (nth 0 (pos-raton tab))) 0) "Ha ganado el raton"))
+       ((= turno 9) (if (= (sumar-filas-adelante tab i) 0) "Ha ganado el raton"))
        ((= turno 1) (if (raton-encerrado estado) "Ha ganado el gato"))
-       "Continua el juego"
        )
-     ) (copy-tree (nth 0 estado)) (nth 1 estado))
+     ) (copy-tree (nth 0 estado)) (nth 0 (nth 1 estado)) (nth 1 (nth 1 estado)) (nth 2 estado))
 )
 
 (defun gen-sucesores (estado p-ficha-mov)
@@ -366,20 +365,4 @@
   )
 )
 
-(defun ordenar-sucesores (sucesores)
-  (let ((ltemp nil))
-    (mapcar #'
-      (lambda (sucesor) 
-        (setq ltemp (append ltemp (list (list sucesor (evaluacion (nth 0 sucesor))))))
-      )
-      sucesores
-    )
-    (sort ltemp #'> :key #'cadr)
-  )
-)
-;((e1 5) (e2 4))
-(defun primero-el-mejor (estado)
-  (let ((sucesores (sucesores-por-turno estado)))
-    (caar (ordenar-sucesores sucesores))
-  )
-)
+
