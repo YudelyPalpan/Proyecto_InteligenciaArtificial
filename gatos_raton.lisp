@@ -267,13 +267,13 @@
                    (retro-raton-derecha estado))) t nil)
      ) (copy-tree (nth 0 estado)) (nth 0 (nth 1 estado)) (nth 1 (nth 1 estado)) (nth 2 estado))
   )
-
+; Si turno es 9 -> T: Ha ganado el raton, NIL: Ha perdido el raton
+; Si turno es 1 -> T: Ha ganado el gato , NIL: Ha perdido el gato
 (defun test-parada (estado)
   ((lambda (tab turno)
      (cond
-       ((= turno 9) (if (= (sumar-filas-adelante tab (nth 0 (pos-raton tab))) 0) "Ha ganado el raton"))
-       ((= turno 1) (if (raton-encerrado estado) "Ha ganado el gato"))
-       "Continua el juego"
+       ((= turno 9) (if (= (sumar-filas-adelante tab (nth 0 (pos-raton tab))) 0) t nil))
+       ((= turno 1) (if (raton-encerrado estado) t nil))
        )
      ) (copy-tree (nth 0 estado)) (nth 1 estado))
 )
@@ -377,9 +377,54 @@
     (sort ltemp #'> :key #'cadr)
   )
 )
-;((e1 5) (e2 4))
+;Primero el mejor
 (defun primero-el-mejor (estado)
   (let ((sucesores (sucesores-por-turno estado)))
     (caar (ordenar-sucesores sucesores))
+  )
+)
+; Algoritmo MINIMAX
+(defun maximo (valores)
+  (car (sort valores #'>))
+)
+
+(defun minimo (sucesores)
+   (car (sort valores #'<))
+)
+
+(defun esNodoMIN (nivel)
+  (oddp nivel)
+)
+
+(defun esNodoMAX (nivel)
+  (evenp nivel)
+)
+(defun minimax (estado nivel)
+  ; Caso base
+  (let ((valores nil))
+    (cond
+     ((test-parada estado) 99)
+     ((not (test-parada estado)) -99)
+     ((= nivel 3) (evaluacion (nth 0 estado)))
+
+
+     (dolist (sucesor (sucesores-por-turno estado))
+       (setq valores (append valores (list (minimax sucesor (+ nivel 1)))))
+       (if (esNodoMAX nivel) (maximo valores))
+       (if (esNodoMIN nivel) (minimo valores))
+       )
+     )
+  )
+)
+
+(defun eleccion-minimax (estado)
+  (let ((sucesores (sucesores-por-turno estado)) (ltemp nil))
+    (mapcar #'
+      (lambda (sucesor) 
+        (setq ltemp (append ltemp (list (list sucesor (minimax sucesor 1)))))
+      )
+      sucesores
+    )
+    (caar (sort ltemp #'> :key #'cadr))
   )
 )
