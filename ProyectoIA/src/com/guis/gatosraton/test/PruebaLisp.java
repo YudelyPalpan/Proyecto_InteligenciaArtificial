@@ -24,7 +24,6 @@ public class PruebaLisp {
 		Function myFunction = (Function) myFunctionSym.getSymbolFunction();
 		
 		Cons list = (Cons) myFunction.execute(Fixnum.getInstance(25));
-		
 		System.out.println(list.printObject());
 	}
 }

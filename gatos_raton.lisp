@@ -437,7 +437,7 @@
           (setq vals (append vals (list (minimax sucesor (+ nivel 1)))))
         )
         (if (esNodoMAX nivel) (maximo vals) (minimo vals))
-       ; (if (esNodoMIN nivel) (return (minimo vals)))
+        ; (if (esNodoMIN nivel) (return (minimo vals)))
       )
      )
     )
