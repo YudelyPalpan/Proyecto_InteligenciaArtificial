@@ -10,20 +10,20 @@
         (0 0 0 0 0 0 0 0)
         (0 0 0 9 0 0 0 0)
         )
-)
+      )
 
 (setq tab_gato
       '(
+        (1 0 1 0 0 0 0 0)
+        (0 0 0 0 0 0 0 1)
+        (0 0 0 0 0 0 0 0)
+        (0 0 0 0 0 0 0 1)
+        (9 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 1 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        (0 0 1 0 0 0 1 0)
-        (1 0 0 0 0 0 0 9)
         )
-)
+      )
 
 (setq tab_raton
       '(
@@ -35,15 +35,17 @@
         (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
+        )
       )
+
+(setq estado-actual (list tablero 9))
+
+(defun estado-actual ()
+  estado-actual
 )
-
-
-(defun hola-mundo (mensaje)
-	(list mensaje (+ mensaje 1))
+(defun set-eactual (estado)
+	(setq estado-actual estado)
 )
-
-
 ; Turno actual
 (setq tr 1) 
 ; Avanzar al gato a la derecha
@@ -211,9 +213,9 @@
     ((not (not estado)) 
      (imprimir-tablero (nth 0 estado))
      (format t "~&Turno: ~S" (nth 1 estado))
+     )
     )
   )
-)
 
 (defun imprimir-tablero (tablero)
   (dolist (fila tablero)
@@ -249,10 +251,10 @@
        )
      (list x y)
      ) 0 0)
-)
+  )
 
 (defun pos-gatos (tablero)
-    ((lambda (pos-gatos)
+  ((lambda (pos-gatos)
      (dotimes (i 8)
        (dotimes (j 8)
          (cond 
@@ -262,9 +264,9 @@
            )
          )
        )
-       pos-gatos
+     pos-gatos
      ) nil)
-)
+  )
 
 (defun raton-encerrado (estado)
   
@@ -274,8 +276,8 @@
           (equal (avanzar-raton-derecha e-alterno p-raton) nil)
           (equal (retro-raton-izquierda e-alterno p-raton) nil)
           (equal (retro-raton-derecha e-alterno p-raton) nil))
-    ) (pos-raton (nth 0 estado)) (copy-tree estado))
-)
+     ) (pos-raton (nth 0 estado)) (copy-tree estado))
+  )
 ; Si turno es 9 -> T: Ha ganado el raton, NIL: Ha perdido el raton
 ; Si turno es 1 -> T: Ha ganado el gato , NIL: Ha perdido el gato
 (defun test-parada (estado)
@@ -285,140 +287,140 @@
        ((= turno 1) (if (raton-encerrado estado) t nil))
        )
      ) (copy-tree (nth 0 estado)) (nth 1 estado))
-)
+  )
 (defun es-ganador (estado)
   (if (raton-encerrado estado) t nil)
-)
+  )
 
 (defun es-perdedor (estado)
   ((lambda (tab)
      (if (= (sumar-filas-adelante tab (nth 0 (pos-raton tab))) 0) t nil)
      ) (copy-tree (nth 0 estado)))
-)
+  )
 (defun gen-sucesores (estado p-ficha-mov)
   ((lambda (sucesores)
-  (cond
-   ((= (nth 1 estado) 9)
-    (if (avanzar-raton-izquierda estado p-ficha-mov) 
-        (setq sucesores (append sucesores (list (avanzar-raton-izquierda estado p-ficha-mov)))))
-    (if (avanzar-raton-derecha estado p-ficha-mov) 
-        (setq sucesores (append sucesores (list (avanzar-raton-derecha estado p-ficha-mov)))))
-    (if (retro-raton-izquierda estado p-ficha-mov) 
-        (setq sucesores (append sucesores (list (retro-raton-izquierda estado p-ficha-mov)))))
-    (if (retro-raton-derecha estado p-ficha-mov) 
-        (setq sucesores (append sucesores (list (retro-raton-derecha estado p-ficha-mov)))))
-   )
-   ((= (nth 1 estado) 1)
-    (if (avanzar-gato-izquierda estado p-ficha-mov) 
-        (setq sucesores (append sucesores (list (avanzar-gato-izquierda estado p-ficha-mov)))))
-    (if (avanzar-gato-derecha estado p-ficha-mov) 
-        (setq sucesores (append sucesores (list (avanzar-gato-derecha estado p-ficha-mov)))))
-    )
-
-   )
-   sucesores
-  ) nil)
-
-)
+     (cond
+       ((= (nth 1 estado) 9)
+        (if (avanzar-raton-izquierda estado p-ficha-mov) 
+            (setq sucesores (append sucesores (list (avanzar-raton-izquierda estado p-ficha-mov)))))
+        (if (avanzar-raton-derecha estado p-ficha-mov) 
+            (setq sucesores (append sucesores (list (avanzar-raton-derecha estado p-ficha-mov)))))
+        (if (retro-raton-izquierda estado p-ficha-mov) 
+            (setq sucesores (append sucesores (list (retro-raton-izquierda estado p-ficha-mov)))))
+        (if (retro-raton-derecha estado p-ficha-mov) 
+            (setq sucesores (append sucesores (list (retro-raton-derecha estado p-ficha-mov)))))
+        )
+       ((= (nth 1 estado) 1)
+        (if (avanzar-gato-izquierda estado p-ficha-mov) 
+            (setq sucesores (append sucesores (list (avanzar-gato-izquierda estado p-ficha-mov)))))
+        (if (avanzar-gato-derecha estado p-ficha-mov) 
+            (setq sucesores (append sucesores (list (avanzar-gato-derecha estado p-ficha-mov)))))
+        )
+       
+       )
+     sucesores
+     ) nil)
+  
+  )
 
 (defun sucesores-por-turno (estado)
   (let ((lista-sucesores nil))
-     (cond 
+    (cond 
       ((= (nth 1 estado) 1)
        (dolist (p-gato (pos-gatos (nth 0 estado)))
          (setq lista-sucesores (append lista-sucesores (gen-sucesores estado p-gato)))
+         )
        )
-      )
       ((= (nth 1 estado) 9)
        (setq lista-sucesores (gen-sucesores estado (pos-raton (nth 0 estado))))
+       )
       )
-     )
-     lista-sucesores
+    lista-sucesores
+    )
   )
-)
 
 
 (defun mostrar-sucesores (sucesores)
   (mapcar #' (lambda (sucesor) (vista-jugada sucesor)) sucesores)
-)
+  )
 
 ;;;;;;;;;;;
 ;11/10/17
 ;;;;;;;;;;;
 
 (defun potencia (x)
- (* x x)
-)
+  (* x x)
+  )
 
 (defun distancia (p1 p2)
- (let ((x0 (nth 0 p1)) (y0 (nth 1 p1)) (x1 (nth 0 p2)) (y1 (nth 1 p2)))
-  (sqrt (+ (potencia (- x1 x0)) (potencia (- y1 y0))))
- )
-)
+  (let ((x0 (nth 0 p1)) (y0 (nth 1 p1)) (x1 (nth 0 p2)) (y1 (nth 1 p2)))
+    (sqrt (+ (potencia (- x1 x0)) (potencia (- y1 y0))))
+    )
+  )
 
 (defun posicion-evaluacion (p1 p2)
- (if (> (- (nth 0 p2) (nth 0 p1)) 0) 
-  1
-  -1
- )
-)
+  (if (> (- (nth 0 p2) (nth 0 p1)) 0) 
+      1
+      -1
+      )
+  )
 
 ;Funcion de Evaluacion
 ;promedio de distancias de los gatos al raton
 (defun evaluacion (tablero)
- (let ((dist-gato-raton 0) (p-raton (pos-raton tablero)))
-  (mapcar #' 
-   (lambda (p-gato)
-    (setq dist-gato-raton (+ dist-gato-raton (* (posicion-evaluacion p-gato p-raton) (distancia p-gato p-raton))))
-   )
-   (pos-gatos tablero)
+  (let ((dist-gato-raton 0) (p-raton (pos-raton tablero)))
+    (mapcar #' 
+            (lambda (p-gato)
+              (setq dist-gato-raton (+ dist-gato-raton (* (posicion-evaluacion p-gato p-raton) (distancia p-gato p-raton))))
+              )
+            (pos-gatos tablero)
+            )
+    dist-gato-raton
+    )
   )
- dist-gato-raton
- )
-)
 
 (defun evaluar-sucesores (sucesores)
   (mapcar #' 
-   (lambda (sucesor)
-     (evaluacion (nth 0 sucesor))
-   )
-   sucesores
+          (lambda (sucesor)
+            (evaluacion (nth 0 sucesor))
+            )
+          sucesores
+          )
   )
-)
 
 (defun ordenar-sucesores (sucesores)
   (let ((ltemp nil))
     (mapcar #'
-      (lambda (sucesor) 
-        (setq ltemp (append ltemp (list (list sucesor (evaluacion (nth 0 sucesor))))))
-      )
-      sucesores
-    )
+            (lambda (sucesor) 
+              (setq ltemp (append ltemp (list (list sucesor (evaluacion (nth 0 sucesor))))))
+              )
+            sucesores
+            )
     (sort ltemp #'> :key #'cadr)
+    )
   )
-)
 ;Primero el mejor
 (defun primero-el-mejor (estado)
   (let ((sucesores (sucesores-por-turno estado)))
     (caar (ordenar-sucesores sucesores))
+    )
   )
-)
 ; Algoritmo MINIMAX
 (defun maximo (vals)
   (car (sort vals #'>))
-)
+  )
 
 (defun minimo (vals)
-   (car (sort vals #'<))
-)
+  (car (sort vals #'<))
+  )
 
 (defun esNodoMIN (nivel)
-  (oddp nivel)
-)
+  (evenp nivel)
+  )
 
 (defun esNodoMAX (nivel)
-  (evenp nivel)
-)
+  (oddp nivel)
+  )
 (defun minimax (estado nivel)
   ; Caso base
   ;(vista-jugada estado)
@@ -426,34 +428,42 @@
   ;(format t "~&Es ganador?:~S" (if (es-ganador estado) "Si" "No"))
   ;(format t "~&Evaluacion:~S " (evaluacion (nth 0 estado)))
   ;(print "----------------")
-
-    (cond
-     ((es-ganador estado) 99)
-
-     ((es-perdedor estado) -99)
-
-     ((= nivel 20) (evaluacion (nth 0 estado)))
-
-     ((< nivel 20) 
-      (let ((vals nil))
-        (dolist (sucesor (sucesores-por-turno estado) )
-          (setq vals (append vals (list (minimax sucesor (+ nivel 1)))))
-          (if (esNodoMAX nivel) (return (maximo vals)))
-          (if (esNodoMIN nivel) (return (minimo vals)))
-        )
-      )
+  
+  (cond
+    ((es-ganador estado) 99)
+    
+    ((es-perdedor estado) -99)
+    
+    ((= nivel 5) (evaluacion (nth 0 estado)))
+    
+    ((< nivel 5) 
+     (let ((vals nil))
+       (dolist (sucesor (sucesores-por-turno estado) )
+         (setq vals (append vals (list (minimax sucesor (+ nivel 1)))))
+         )
+       (if (esNodoMAX nivel) (maximo vals) (minimo vals))
+       ; (if (esNodoMIN nivel) (return (minimo vals)))
+       )
      )
     )
-)
+  )
 
 (defun eleccion-minimax (estado)
   (let ((sucesores (sucesores-por-turno estado)) (ltemp nil))
     (mapcar #'
-      (lambda (sucesor) 
-        (setq ltemp (append ltemp (list (list sucesor (minimax sucesor 1)))))
-      )
-      sucesores
-    )
+            (lambda (sucesor) 
+              (setq ltemp (append ltemp (list (list sucesor (minimax sucesor 1)))))
+              )
+            sucesores
+            )
     (caar (sort ltemp #'> :key #'cadr))
+    )
   )
-)
+
+
+;EJECUTAR JUEGO
+; para la maquina:
+; (vista-jugada (setq eactual (eleccion-minimax eactual)))
+
+;para el jugador:
+; (vista-jugada (setq eactual (avanzar-raton-izquierda eactual (pos-raton (nth 0 eactual)))))
