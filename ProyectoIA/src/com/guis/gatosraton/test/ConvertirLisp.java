@@ -1,14 +1,16 @@
 package com.guis.gatosraton.test;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import org.armedbear.lisp.Fixnum;
 import org.armedbear.lisp.Function;
 import org.armedbear.lisp.Interpreter;
 import org.armedbear.lisp.LispObject;
 import org.armedbear.lisp.Package;
 import org.armedbear.lisp.Packages;
 import org.armedbear.lisp.Symbol;
+
+import com.guis.gatosraton.views.FormTablero;
 
 public class ConvertirLisp {
 
@@ -48,14 +50,15 @@ public class ConvertirLisp {
 				switch (casilla.printObject()) {
 				case "1":
 					tablero[i][j].setEnabled(true);
-					tablero[i][j].setText("G");
+					tablero[i][j].setIcon(new ImageIcon(FormTablero.class.getResource("/com/guis/gatosraton/views/img/gatito.png")));
 					break;
 				case "9":
 					tablero[i][j].setEnabled(true);
-					tablero[i][j].setText("R");
+					tablero[i][j].setIcon(new ImageIcon(FormTablero.class.getResource("/com/guis/gatosraton/views/img/ratoncito.png")));
 					break;
 				case "0":
 					tablero[i][j].setEnabled(false);
+					tablero[i][j].setIcon(null);
 					tablero[i][j].setText("");
 					break;
 				}
@@ -89,5 +92,45 @@ public class ConvertirLisp {
 		Function myFunction = (Function) myFunctionSym.getSymbolFunction();
 
 		return myFunction.execute(tablero);
+	}
+	
+	public LispObject jugadaMinimax() {
+		Symbol myFunctionSym = defaultPackage.findAccessibleSymbol("ELECCION-MINIMAX");
+		
+		if(myFunctionSym != null) {
+			Function myFunction = (Function) myFunctionSym.getSymbolFunction();
+			return myFunction.execute(getEActual());
+		} else {
+			return null;
+		}
+	}
+	
+	public void iniciarJuego() {
+		Symbol myFunctionSym = defaultPackage.findAccessibleSymbol("INICIAR-NUEVO-JUEGO");
+		if(myFunctionSym != null) {
+			Function myFunction = (Function) myFunctionSym.getSymbolFunction();
+			myFunction.execute();
+		} 
+	}
+	
+	public String jugadorGanador() {
+		String ganador = null;
+		Symbol myFunctionSym = defaultPackage.findAccessibleSymbol("ES-GANADOR");
+		if(myFunctionSym != null) {
+			Function myFunction = (Function) myFunctionSym.getSymbolFunction();
+			LispObject gatoGanador = myFunction.execute(getEActual());
+			if(gatoGanador.printObject().equals("T")){
+				ganador = "Ha ganado el gato";
+			} else {
+				myFunctionSym = defaultPackage.findAccessibleSymbol("ES-PERDEDOR");
+				if(myFunctionSym != null) {
+					myFunction = (Function) myFunctionSym.getSymbolFunction();
+					LispObject ratonGanador = myFunction.execute(getEActual());
+					ganador = (ratonGanador.printObject().equals("T")) ? "Ha ganado el raton" : null;
+				} 
+			}
+		} 
+		
+		return ganador;
 	}
 }

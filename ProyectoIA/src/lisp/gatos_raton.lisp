@@ -37,12 +37,27 @@
         (0 0 0 0 0 0 0 0)
         )
       )
-
-(setq estado-actual (list tablero 9))
-
+      
+(setq estado-actual (list tablero 1))
 (defun estado-actual ()
   estado-actual
 )
+
+(defun elegir-pos ()
+	(let ((pos (random 8)))
+		(if (oddp pos) pos (elegir-pos))
+	)
+	
+)
+
+(defun iniciar-nuevo-juego ()
+	(dotimes (i 7)
+		(setf (nth i (nth 7 tablero)) 0)
+	)
+	(setf (nth (elegir-pos) (nth 7 tablero)) 9)
+	(setq estado-actual (list tablero 1))
+)
+
 (defun set-eactual (estado)
 	(setq estado-actual estado)
 )
