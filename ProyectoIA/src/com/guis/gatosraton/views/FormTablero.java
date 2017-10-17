@@ -25,77 +25,57 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class FormTablero extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					String options[] = {"Gatos", "Raton"};
-					String opcion = (String) 
-							JOptionPane.showInputDialog(null, "Elije jugador",
-														null, JOptionPane.QUESTION_MESSAGE, null, 
-														options, 1);
-					
-					FormTablero frame = new FormTablero((opcion.equals("Gatos") ? 1 : 9));
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the frame.
 	 */
-	public FormTablero(int jugador) {
+	public FormTablero(int maquina) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FormTablero.class.getResource("/com/guis/gatosraton/views/img/iconjuego.png")));
 		
-		if(jugador == 9) {
+		if(maquina == 9) {
 			iniciarPosGatos();
 		}
 		
 		setFont(new Font("Ubuntu", Font.PLAIN, 14));
-		setIconImage(Toolkit.getDefaultToolkit().getImage(FormTablero.class.getResource("/com/guis/gatosraton/views/img/iconjuego.png")));
 		setTitle("Inteligencia Artificial - Esrategia MINIMAX - Los gatos y el rat\u00F3n");
 		convertidor = new ConvertirLisp("src/lisp/gatos_raton.lisp");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 719, 533);
+		setBounds(100, 100, 709, 556);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
+		
+		setLocationRelativeTo(null);
+		
+		
+
+		contentPane.setLayout(null);
+		
+		panel_2 = new JPanel();
+		panel_2.setBounds(10, 32, 681, 480);
+		contentPane.add(panel_2);
+		panel_2.setLayout(null);
+		
 		panel = new JPanel();
-		panel.setBounds(22, 11, 480, 480);
+		panel.setBounds(0, 0, 480, 480);
+		panel_2.add(panel);
 		panel.setLayout(new GridLayout(8, 8, 1, 1));
-		
-		
-		/********/
-		rdbtnGato_1.setEnabled(false);
-		rdbtnGato_2.setEnabled(false);
-		rdbtnGato_3.setEnabled(false);
-		rdbtnGato_4.setEnabled(false);
-		
-		/********/
-		
 		llenarTablero(7,3);
 		convertidor.convertirTablero(tablero,convertidor.getEActual());
-		contentPane.setLayout(null);
-		contentPane.add(panel);
-		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(512, 11, 191, 480);
-		contentPane.add(panel_1);
+		panel_1.setBounds(490, 0, 191, 480);
+		panel_2.add(panel_1);
 		panel_1.setLayout(null);
-		
+
 		JButton btnArribaDerecha = new JButton("");
 		btnArribaDerecha.setBackground(new Color(100, 149, 237));
 		btnArribaDerecha.setIcon(new ImageIcon(FormTablero.class.getResource("/com/guis/gatosraton/views/img/ad.png")));
@@ -150,7 +130,7 @@ public class FormTablero extends JFrame {
 		btnAbajoDerecha.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LispObject nuevoEstado;
-				if(jugador == 1) {
+				if(maquina == 1) {
 					nuevoEstado = convertidor.ejecutarAccion("RETRO-RATON-DERECHA");
 				} else {
 					Point p = posGato[gatoElegido()];
@@ -162,7 +142,7 @@ public class FormTablero extends JFrame {
 					convertidor.convertirTablero(tablero, convertidor.getEActual());
 					mostrarTurno();
 					update(getGraphics());
-					if(jugador == 1) {
+					if(maquina == 1) {
 						juegaGato();
 					} else {
 						moverGatoElegido("AVANZAR-GATO-DERECHA");
@@ -185,7 +165,7 @@ public class FormTablero extends JFrame {
 		btnAbajoIzquierda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LispObject nuevoEstado;
-				if(jugador == 1) {
+				if(maquina == 1) {
 					nuevoEstado = convertidor.ejecutarAccion("RETRO-RATON-IZQUIERDA");
 				} else {
 					Point p = posGato[gatoElegido()];
@@ -197,7 +177,7 @@ public class FormTablero extends JFrame {
 					convertidor.convertirTablero(tablero, convertidor.getEActual());
 					mostrarTurno();
 					update(getGraphics());
-					if(jugador == 1) {
+					if(maquina == 1) {
 						juegaGato();
 					} else {
 						moverGatoElegido("AVANZAR-GATO-IZQUIERDA");
@@ -213,13 +193,13 @@ public class FormTablero extends JFrame {
 		panel_1.add(btnAbajoIzquierda);
 		
 		JButton btnNuevoJuego = new JButton("Nuevo Juego");
-		btnNuevoJuego.setBackground(new Color(100, 149, 237));
+		btnNuevoJuego.setBackground(Color.WHITE);
 		btnNuevoJuego.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int resultado = JOptionPane.showConfirmDialog(rootPane, "¿Desea Iniciar el juego?");
 				
 				if(resultado != JOptionPane.CANCEL_OPTION) {
-					if(jugador == 1) {
+					if(maquina == 1) {
 						int turno = (resultado == JOptionPane.YES_OPTION) ? 9 : 1;
 						convertidor.iniciarJuego(turno);
 						convertidor.convertirTablero(tablero, convertidor.getEActual());
@@ -249,7 +229,7 @@ public class FormTablero extends JFrame {
 				}
 			}
 		});
-		btnNuevoJuego.setBounds(28, 22, 139, 45);
+		btnNuevoJuego.setBounds(28, 22, 139, 51);
 		panel_1.add(btnNuevoJuego);
 		btnAbajoDerecha.setEnabled(false);
 		btnAbajoIzquierda.setEnabled(false);
@@ -282,6 +262,47 @@ public class FormTablero extends JFrame {
 		buttonGroup.add(rdbtnGato_4);
 		rdbtnGato_4.setBounds(38, 236, 109, 23);
 		panel_1.add(rdbtnGato_4);
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBounds(0, 0, 703, 21);
+		contentPane.add(menuBar);
+		
+		JMenu mnOpciones = new JMenu("Opciones");
+		menuBar.add(mnOpciones);
+		
+		JMenuItem mntmElegirOtroJugador = new JMenuItem("Elegir otro jugador");
+		mntmElegirOtroJugador.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							FormPrincipal frame = new FormPrincipal();
+							frame.setVisible(true);
+							FormTablero.this.setVisible(false);
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		mnOpciones.add(mntmElegirOtroJugador);
+		
+		JMenuItem mntmInstrucciones = new JMenuItem("Instrucciones");
+		mnOpciones.add(mntmInstrucciones);
+		
+		JMenuItem mntmAcercaDeNosotros = new JMenuItem("Acerca de nosotros");
+		mnOpciones.add(mntmAcercaDeNosotros);
+		
+		if(maquina == 1) {
+			/********/
+			rdbtnGato_1.setEnabled(false);
+			rdbtnGato_2.setEnabled(false);
+			rdbtnGato_3.setEnabled(false);
+			rdbtnGato_4.setEnabled(false);
+			/********/
+		}
 	}
 	
 	private void juegaGato() {
@@ -293,7 +314,7 @@ public class FormTablero extends JFrame {
 	
 	private void juegaRaton() {
 		convertidor.setEActual(convertidor.jugadaMinimaxRaton());
-		System.out.println(convertidor.getEActual().printObject());
+		//System.out.println(convertidor.getEActual().printObject());
 		convertidor.convertirTablero(tablero, convertidor.getEActual());
 		mostrarTurno();
 		update(getGraphics());
@@ -368,4 +389,5 @@ public class FormTablero extends JFrame {
 	private JPanel panel;
 	private ConvertirLisp convertidor;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JPanel panel_2;
 }

@@ -335,7 +335,7 @@
 
 (defun mostrar-sucesores (sucesores)
   (mapcar #' (lambda (sucesor) (vista-jugada sucesor)) sucesores)
-  )
+)
 
 ;;;;;;;;;;;
 ;11/10/17
@@ -387,7 +387,23 @@
     dist-gato-raton
     )
 )
+ 
+(defun bloque-gatos (tablero)
+  (let* ((cont 0) (i (caar (pos-gatos tablero))) (init (- i 1)) (end (+ i 1)))
+    (dotimes (init end)
+      (cond
+       ((and (>= i 0) (<= i 7))
+        (mapcar #'(lambda(x) (setq cont (+ cont x))) (nth i tablero))
+       )
+      )
+    )
+    cont
+  )
+)
 
+(defun evaluacion-2 (tablero)
+  (if (= (bloque-gatos tablero) 4) 50 (evaluacion tablero))
+)
 (defun evaluar-sucesores (sucesores)
   (mapcar #' 
           (lambda (sucesor)
@@ -443,7 +459,7 @@
     
     ((es-perdedor estado) -99)
     
-    ((= nivel 5) (evaluacion (nth 0 estado)))
+    ((= nivel 5) (* -1 (evaluacion-2 (nth 0 estado))))
     
     ((< nivel 5) 
      (let ((vals nil))
@@ -482,7 +498,7 @@
     
     ((es-perdedor estado) 99)
     
-    ((= nivel 5) (* -1 (evaluacion (nth 0 estado))))
+    ((= nivel 5) (evaluacion-2 (nth 0 estado)))
     
     ((< nivel 5) 
      (let ((vals nil))
