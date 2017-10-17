@@ -20,12 +20,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import java.awt.Font;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class FormTablero extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
@@ -83,6 +82,7 @@ public class FormTablero extends JFrame {
 				if(!nuevoEstado.printObject().equals("NIL")) {
 					convertidor.setEActual(nuevoEstado);
 					convertidor.convertirTablero(tablero, convertidor.getEActual());
+					mostrarTurno();
 					update(getGraphics());
 					juegaGato();
 					mostrarMensajeGanador();
@@ -104,6 +104,7 @@ public class FormTablero extends JFrame {
 				if(!nuevoEstado.printObject().equals("NIL")) {
 					convertidor.setEActual(nuevoEstado);
 					convertidor.convertirTablero(tablero, convertidor.getEActual());
+					mostrarTurno();
 					update(getGraphics());
 					juegaGato();
 					mostrarMensajeGanador();
@@ -125,6 +126,7 @@ public class FormTablero extends JFrame {
 				if(!nuevoEstado.printObject().equals("NIL")) {
 					convertidor.setEActual(nuevoEstado);
 					convertidor.convertirTablero(tablero, convertidor.getEActual());
+					mostrarTurno();
 					update(getGraphics());
 					juegaGato();
 					mostrarMensajeGanador();
@@ -146,6 +148,7 @@ public class FormTablero extends JFrame {
 				if(!nuevoEstado.printObject().equals("NIL")) {
 					convertidor.setEActual(nuevoEstado);
 					convertidor.convertirTablero(tablero, convertidor.getEActual());
+					mostrarTurno();
 					update(getGraphics());
 					juegaGato();
 					mostrarMensajeGanador();
@@ -161,14 +164,23 @@ public class FormTablero extends JFrame {
 		btnNuevoJuego.setBackground(new Color(100, 149, 237));
 		btnNuevoJuego.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int resultado = JOptionPane.showConfirmDialog(rootPane, "¿Desea Iniciar el juego?");
 				
-				convertidor.iniciarJuego();
-				juegaGato();
-				btnAbajoDerecha.setEnabled(true);
-				btnAbajoIzquierda.setEnabled(true);
-				btnArribaDerecha.setEnabled(true);
-				btnArribaIzquierda.setEnabled(true);
-				
+				if(resultado != JOptionPane.CANCEL_OPTION) {
+					int turno = (resultado == JOptionPane.YES_OPTION) ? 9 : 1;
+					
+					convertidor.iniciarJuego(turno);
+					convertidor.convertirTablero(tablero, convertidor.getEActual());
+					mostrarTurno();
+					if(turno == 1) {
+						juegaGato();
+					}
+					
+					btnAbajoDerecha.setEnabled(true);
+					btnAbajoIzquierda.setEnabled(true);
+					btnArribaDerecha.setEnabled(true);
+					btnArribaIzquierda.setEnabled(true);
+				}
 			}
 		});
 		btnNuevoJuego.setBounds(28, 22, 139, 45);
@@ -177,13 +189,21 @@ public class FormTablero extends JFrame {
 		btnAbajoIzquierda.setEnabled(false);
 		btnArribaDerecha.setEnabled(false);
 		btnArribaIzquierda.setEnabled(false);
+		
+		lblTurno = new JLabel("Turno:");
+		lblTurno.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTurno.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblTurno.setBounds(28, 109, 139, 39);
+		panel_1.add(lblTurno);
 	}
 	
 	private void juegaGato() {
 		convertidor.setEActual(convertidor.jugadaMinimax());
 		convertidor.convertirTablero(tablero, convertidor.getEActual());
+		mostrarTurno();
 		update(getGraphics());
 	}
+	
 	private void llenarTablero (int xRaton, int yRaton) {
 		boolean color = true;
 		for( int i = 0; i < 8; i++) {
@@ -208,13 +228,20 @@ public class FormTablero extends JFrame {
 		
 		tablero[xRaton][yRaton].setText(tablero[xRaton][yRaton].getText() + "R");
 	}
-	
+
 	private void mostrarMensajeGanador() {
 		String mensaje = convertidor.jugadorGanador();
 		if (mensaje != null) {
 			JOptionPane.showMessageDialog(contentPane, mensaje);
 		}
 	}
+	
+	
+	private void mostrarTurno() {
+		String turno = (convertidor.getEActual().NTH(1).printObject().equals("1")) ? "Gato" : "Raton";
+		lblTurno.setText("Turno: " + turno);
+	}
+	private JLabel lblTurno;
 	private JButton tablero [][] = new JButton[8][8];
 	private JPanel panel;
 	private ConvertirLisp convertidor;

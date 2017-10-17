@@ -3,6 +3,7 @@ package com.guis.gatosraton.test;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import org.armedbear.lisp.Fixnum;
 import org.armedbear.lisp.Function;
 import org.armedbear.lisp.Interpreter;
 import org.armedbear.lisp.LispObject;
@@ -105,11 +106,11 @@ public class ConvertirLisp {
 		}
 	}
 	
-	public void iniciarJuego() {
+	public void iniciarJuego(int turno) {
 		Symbol myFunctionSym = defaultPackage.findAccessibleSymbol("INICIAR-NUEVO-JUEGO");
 		if(myFunctionSym != null) {
 			Function myFunction = (Function) myFunctionSym.getSymbolFunction();
-			myFunction.execute();
+			myFunction.execute(Fixnum.getInstance(turno));
 		} 
 	}
 	
