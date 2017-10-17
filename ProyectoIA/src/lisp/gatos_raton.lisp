@@ -8,41 +8,34 @@
         (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
-        (0 0 0 9 0 0 0 0)
-        )
-      )
-
-(setq tab_gato
-      '(
-        (1 0 1 0 0 0 0 0)
-        (0 0 0 0 0 0 0 1)
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 1)
-        (9 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
         )
-      )
-
-(setq tab_raton
-      '(
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        (0 0 1 0 1 0 0 0)
-        (0 0 0 9 0 0 0 0)
-        (0 0 1 0 1 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        )
-      )
-
-(setq estado-actual (list tablero 9))
-
+)
+      
+(setq estado-actual (list tablero 1))
 (defun estado-actual ()
   estado-actual
 )
+(defun to-pos (x y)
+	(list x y)
+)
+(defun elegir-pos ()
+  (let ((pos (random 8)))
+    (if (oddp pos) pos (elegir-pos))
+  )
+)
+
+(defun iniciar-nuevo-juego (turno)
+  (let ((copia-tablero (copy-tree tablero)))
+      ;  (dotimes (i 7)
+      ;		(setf (nth i (nth 7 tablero)) 0)
+      ;  )
+ 
+	(setf (nth (elegir-pos) (nth 7 copia-tablero)) 9)
+	(setq estado-actual (list copia-tablero turno))
+  )
+)
+
 (defun set-eactual (estado)
 	(setq estado-actual estado)
 )
@@ -365,19 +358,35 @@
       )
   )
 
+
+(defun pendiente (p1 p2)
+  (let ((x1 (nth 0 p1)) (y1 (nth 1 p1)) (x2 (nth 0 p2)) (y2 (nth 1 p2)))
+    (if (= 0 (- x1 x2)) 0 (/ (- y1 y2) (- x1 x2)))
+  )
+)
+(defun misma-diagonal (p1 p2)
+  (if (= (abs (pendiente p1 p2)) 1) 10 0.5)
+)
+(defun misma-linea (p1 p2)
+  (if(= (nth 1 p1) (nth 1 p2)) 5 0.5) 
+)
 ;Funcion de Evaluacion
 ;promedio de distancias de los gatos al raton
 (defun evaluacion (tablero)
   (let ((dist-gato-raton 0) (p-raton (pos-raton tablero)))
     (mapcar #' 
-            (lambda (p-gato)
-              (setq dist-gato-raton (+ dist-gato-raton (* (posicion-evaluacion p-gato p-raton) (distancia p-gato p-raton))))
+      (lambda (p-gato)
+        (setq dist-gato-raton 
+              (+ dist-gato-raton 
+                 (* (posicion-evaluacion p-gato p-raton) (distancia p-gato p-raton) (misma-linea p-gato p-raton) (misma-diagonal p-gato p-raton))
               )
-            (pos-gatos tablero)
-            )
+        )
+      )
+      (pos-gatos tablero)
+     )
     dist-gato-raton
     )
-  )
+)
 
 (defun evaluar-sucesores (sucesores)
   (mapcar #' 
@@ -459,6 +468,46 @@
     (caar (sort ltemp #'> :key #'cadr))
     )
   )
+
+(defun minimax-raton (estado nivel)
+  ; Caso base
+  ;(vista-jugada estado)
+  ;(format t "~&Nivel:~S " nivel)
+  ;(format t "~&Es ganador?:~S" (if (es-ganador estado) "Si" "No"))
+  ;(format t "~&Evaluacion:~S " (evaluacion (nth 0 estado)))
+  ;(print "----------------")
+  
+  (cond
+    ((es-ganador estado) -99)
+    
+    ((es-perdedor estado) 99)
+    
+    ((= nivel 5) (* -1 (evaluacion (nth 0 estado))))
+    
+    ((< nivel 5) 
+     (let ((vals nil))
+       (dolist (sucesor (sucesores-por-turno estado) )
+         (setq vals (append vals (list (minimax-raton sucesor (+ nivel 1)))))
+         )
+       (if (esNodoMAX nivel) (maximo vals) (minimo vals))
+       ; (if (esNodoMIN nivel) (return (minimo vals)))
+       )
+     )
+    )
+  )
+
+(defun eleccion-minimax-raton (estado)
+  (let ((sucesores (sucesores-por-turno estado)) (ltemp nil))
+    (mapcar #'
+            (lambda (sucesor) 
+              (setq ltemp (append ltemp (list (list sucesor (minimax-raton sucesor 1)))))
+              )
+            sucesores
+            )
+    (caar (sort ltemp #'> :key #'cadr))
+    )
+  )
+
 
 
 ;EJECUTAR JUEGO
