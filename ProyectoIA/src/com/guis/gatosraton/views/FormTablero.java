@@ -39,15 +39,10 @@ public class FormTablero extends JFrame {
 			public void run() {
 				try {
 					String options[] = {"Gatos", "Raton"};
-					String opcion = (String) JOptionPane.showInputDialog
-							(null, 
-							"¿Que jugador desea que sea la máquina?", 
-							"Eligir Jugador Maquina", 
-							JOptionPane.QUESTION_MESSAGE, 
-							null, 
-							options, 
-							1
-							);
+					String opcion = (String) 
+							JOptionPane.showInputDialog(null, "Elije jugador",
+														null, JOptionPane.QUESTION_MESSAGE, null, 
+														options, 1);
 					
 					FormTablero frame = new FormTablero((opcion.equals("Gatos") ? 1 : 9));
 					frame.setVisible(true);
@@ -69,7 +64,7 @@ public class FormTablero extends JFrame {
 		
 		setFont(new Font("Ubuntu", Font.PLAIN, 14));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FormTablero.class.getResource("/com/guis/gatosraton/views/img/iconjuego.png")));
-		setTitle("Los gatos y el rat\u00F3n");
+		setTitle("Inteligencia Artificial - Esrategia MINIMAX - Los gatos y el rat\u00F3n");
 		convertidor = new ConvertirLisp("src/lisp/gatos_raton.lisp");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,6 +76,15 @@ public class FormTablero extends JFrame {
 		panel = new JPanel();
 		panel.setBounds(22, 11, 480, 480);
 		panel.setLayout(new GridLayout(8, 8, 1, 1));
+		
+		
+		/********/
+		rdbtnGato_1.setEnabled(false);
+		rdbtnGato_2.setEnabled(false);
+		rdbtnGato_3.setEnabled(false);
+		rdbtnGato_4.setEnabled(false);
+		
+		/********/
 		
 		llenarTablero(7,3);
 		convertidor.convertirTablero(tablero,convertidor.getEActual());
@@ -96,6 +100,7 @@ public class FormTablero extends JFrame {
 		btnArribaDerecha.setBackground(new Color(100, 149, 237));
 		btnArribaDerecha.setIcon(new ImageIcon(FormTablero.class.getResource("/com/guis/gatosraton/views/img/ad.png")));
 		btnArribaDerecha.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				LispObject nuevoEstado = convertidor.ejecutarAccion("AVANZAR-RATON-DERECHA");
 
@@ -110,8 +115,9 @@ public class FormTablero extends JFrame {
 					JOptionPane.showMessageDialog(rootPane, "Jugada no valida", "Jugada no valida", JOptionPane.WARNING_MESSAGE);
 				}
 			
-			}
+		    }
 		});
+		
 		btnArribaDerecha.setBounds(111, 287, 56, 59);
 		panel_1.add(btnArribaDerecha);
 		
@@ -160,6 +166,7 @@ public class FormTablero extends JFrame {
 						juegaGato();
 					} else {
 						moverGatoElegido("AVANZAR-GATO-DERECHA");
+						
 						juegaRaton();
 					}
 					mostrarMensajeGanador();
