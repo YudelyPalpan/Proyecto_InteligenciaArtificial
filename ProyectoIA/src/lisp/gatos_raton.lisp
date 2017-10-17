@@ -16,7 +16,9 @@
 (defun estado-actual ()
   estado-actual
 )
-
+(defun to-pos (x y)
+	(list x y)
+)
 (defun elegir-pos ()
   (let ((pos (random 8)))
     (if (oddp pos) pos (elegir-pos))
@@ -466,6 +468,46 @@
     (caar (sort ltemp #'> :key #'cadr))
     )
   )
+
+(defun minimax-raton (estado nivel)
+  ; Caso base
+  ;(vista-jugada estado)
+  ;(format t "~&Nivel:~S " nivel)
+  ;(format t "~&Es ganador?:~S" (if (es-ganador estado) "Si" "No"))
+  ;(format t "~&Evaluacion:~S " (evaluacion (nth 0 estado)))
+  ;(print "----------------")
+  
+  (cond
+    ((es-ganador estado) -99)
+    
+    ((es-perdedor estado) 99)
+    
+    ((= nivel 5) (* -1 (evaluacion (nth 0 estado))))
+    
+    ((< nivel 5) 
+     (let ((vals nil))
+       (dolist (sucesor (sucesores-por-turno estado) )
+         (setq vals (append vals (list (minimax-raton sucesor (+ nivel 1)))))
+         )
+       (if (esNodoMAX nivel) (maximo vals) (minimo vals))
+       ; (if (esNodoMIN nivel) (return (minimo vals)))
+       )
+     )
+    )
+  )
+
+(defun eleccion-minimax-raton (estado)
+  (let ((sucesores (sucesores-por-turno estado)) (ltemp nil))
+    (mapcar #'
+            (lambda (sucesor) 
+              (setq ltemp (append ltemp (list (list sucesor (minimax-raton sucesor 1)))))
+              )
+            sucesores
+            )
+    (caar (sort ltemp #'> :key #'cadr))
+    )
+  )
+
 
 
 ;EJECUTAR JUEGO

@@ -85,6 +85,20 @@ public class ConvertirLisp {
 			return null;
 		}
 	}
+	
+	public LispObject ejecutarAccion(String nombreAccion, int i, int j) {
+		
+		LispObject eActual = getEActual();
+	
+		Symbol myFunctionSym = defaultPackage.findAccessibleSymbol(nombreAccion);
+		
+		if(myFunctionSym != null) {
+			Function myFunction = (Function) myFunctionSym.getSymbolFunction();
+			return myFunction.execute(eActual, toPos(i, j));
+		} else {
+			return null;
+		}
+	}
 
 	private LispObject posicionRaton(LispObject tablero) {
 
@@ -97,6 +111,17 @@ public class ConvertirLisp {
 	
 	public LispObject jugadaMinimax() {
 		Symbol myFunctionSym = defaultPackage.findAccessibleSymbol("ELECCION-MINIMAX");
+		
+		if(myFunctionSym != null) {
+			Function myFunction = (Function) myFunctionSym.getSymbolFunction();
+			return myFunction.execute(getEActual());
+		} else {
+			return null;
+		}
+	}
+	
+	public LispObject jugadaMinimaxRaton() {
+		Symbol myFunctionSym = defaultPackage.findAccessibleSymbol("ELECCION-MINIMAX-RATON");
 		
 		if(myFunctionSym != null) {
 			Function myFunction = (Function) myFunctionSym.getSymbolFunction();
@@ -133,5 +158,15 @@ public class ConvertirLisp {
 		} 
 		
 		return ganador;
+	}
+	
+	public LispObject toPos(int x, int y) {
+		Symbol myFunctionSym = defaultPackage.findAccessibleSymbol("TO-POS");
+		if(myFunctionSym != null) {
+			Function myFunction = (Function) myFunctionSym.getSymbolFunction();
+			return myFunction.execute(Fixnum.getInstance(x), Fixnum.getInstance(y));
+		} else {
+			return null;
+		}
 	}
 }

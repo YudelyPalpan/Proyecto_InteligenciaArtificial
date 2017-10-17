@@ -8,35 +8,9 @@
         (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
-        (0 0 0 9 0 0 0 0)
-        )
-      )
-
-(setq tab_gato
-      '(
-        (1 0 1 0 0 0 0 0)
-        (0 0 0 0 0 0 0 1)
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 1)
-        (9 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
         (0 0 0 0 0 0 0 0)
         )
-      )
-
-(setq tab_raton
-      '(
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        (0 0 1 0 1 0 0 0)
-        (0 0 0 9 0 0 0 0)
-        (0 0 1 0 1 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        (0 0 0 0 0 0 0 0)
-        )
-      )
+)
       
 (setq estado-actual (list tablero 1))
 (defun estado-actual ()
@@ -44,18 +18,19 @@
 )
 
 (defun elegir-pos ()
-	(let ((pos (random 8)))
-		(if (oddp pos) pos (elegir-pos))
-	)
+  (let ((pos (random 8)))
+    (if (oddp pos) pos (elegir-pos))
+  )
 )
 
 (defun iniciar-nuevo-juego ()
-	(let copia-tablero (copy-tree tablero))
-	(dotimes (i 7)
-		(setf (nth i (nth 7 tablero)) 0)
-	)
-	(setf (nth (elegir-pos) (nth 7 tablero)) 9)
-	(setq estado-actual (list tablero 1))
+  (let ((copia-tablero (copy-tree tablero)))
+      ;  (dotimes (i 7)
+      ;		(setf (nth i (nth 7 tablero)) 0)
+      ;  )
+	(setf (nth (elegir-pos) (nth 7 copia-tablero)) 9)
+	(setq estado-actual (list copia-tablero 1))
+  )
 )
 
 (defun set-eactual (estado)
@@ -380,19 +355,22 @@
       )
   )
 
+(defun misma-linea (p1 p2)
+  (if(= (nth 1 p1) (nth 1 p2)) 5 1) 
+)
 ;Funcion de Evaluacion
 ;promedio de distancias de los gatos al raton
 (defun evaluacion (tablero)
   (let ((dist-gato-raton 0) (p-raton (pos-raton tablero)))
     (mapcar #' 
-            (lambda (p-gato)
-              (setq dist-gato-raton (+ dist-gato-raton (* (posicion-evaluacion p-gato p-raton) (distancia p-gato p-raton))))
-              )
-            (pos-gatos tablero)
-            )
+      (lambda (p-gato)
+        (setq dist-gato-raton (+ dist-gato-raton (* (posicion-evaluacion p-gato p-raton) (distancia p-gato p-raton) (misma-linea p-gato p-raton))))
+      )
+      (pos-gatos tablero)
+     )
     dist-gato-raton
     )
-  )
+)
 
 (defun evaluar-sucesores (sucesores)
   (mapcar #' 
